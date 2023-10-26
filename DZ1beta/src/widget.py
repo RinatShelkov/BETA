@@ -1,33 +1,24 @@
 import datetime
+import re
+
+from masks import return_mask_bank_account, return_mask_cards
 
 
-def return_mask_card_account(type_card_or_account: str, number_card_or_account: str) -> str:
+def return_mask_card_account(information_on_card: str) -> str:
     """Принимает на вход строку с информацией типа карты/счета и номера карты/счета
     возвращает эту строку с замаскированным номером карты/счета.
     :param
-    type_card_or_account: Тип карты/счета
-    number_card_or_account: Номер карты/счета
-        :return: Маскированный по правилу номер карты/счета"""
-    if len(number_card_or_account.replace(" ", "")) == 16:
-        number_card_or_account = number_card_or_account.replace(" ", "")
-        number_card_or_account = (
-            number_card_or_account[:6] + (len(number_card_or_account[6:-4]) * "*") + number_card_or_account[-4:]
-        )
-        part_of_number_card_or_account = len(number_card_or_account)
-        number_of_parts = len(number_card_or_account) // 4
-        mask_card_or_account = " ".join(
-            [
-                number_card_or_account[i : i + number_of_parts]
-                for i in range(0, part_of_number_card_or_account, number_of_parts)
-            ]
-        )
-    elif len(number_card_or_account.replace(" ", "")) == 20:
-        number_card_or_account = number_card_or_account.replace(" ", "")
-        mask_card_or_account = len(number_card_or_account[14:16]) * "*" + number_card_or_account[-4:]
-
+    information_on_card: Тип карты/счета
+    :return: Маскированный по правилу номер карты/счета"""
+    number_card_or_count = " ".join(re.findall(r"\d+", information_on_card))
+    information_on_card = information_on_card.replace(number_card_or_count, "")
+    if len(number_card_or_count) == 16:
+        number_card_or_count = return_mask_cards(number_card_or_count)
+    elif len(number_card_or_count) == 20:
+        number_card_or_count = return_mask_bank_account(number_card_or_count)
     else:
-        return f"{'Неправильно введен номер карты/счета'}"
-    return f"{type_card_or_account.title()} {mask_card_or_account}"
+        return f"{'Неправильно введены данные номер карты/счета'}"
+    return f"{information_on_card.title()} {number_card_or_count}"
 
 
 def return_date_from_str(string_with_date: str) -> str:

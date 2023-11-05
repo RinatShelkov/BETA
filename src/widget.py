@@ -1,7 +1,7 @@
 import datetime
 import re
 
-from masks import return_mask_bank_account, return_mask_cards
+from src.masks import return_mask_bank_account, return_mask_cards
 
 
 def return_mask_card_account(information_on_card: str) -> str:

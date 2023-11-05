@@ -1,4 +1,4 @@
-def get_dict_with_key_state(list_dict: list, key="EXECUTED") -> list:
+def get_dict_with_key_state(list_dict: list, key: str = "EXECUTED") -> list:
     """Функция принимает список словарей и возвращает список словарей с ключом state = EXECUTED
     :param
     list_dict: Список словарей с операцийми для фильтрации

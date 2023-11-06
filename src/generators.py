@@ -1,3 +1,4 @@
+import textwrap
 from collections.abc import Iterator
 
 
@@ -19,3 +20,17 @@ def transaction_descriptions(transactions: list) -> Iterator[str]:
     :return операции по очереди"""
     for description in transactions:
         yield description["description"]
+
+
+def card_number_generator(bottom_range: int, up_range: int) -> Iterator | str:
+    """Генератор номеров банковских карт, генерирует номера карт в формате "XXXX XXXX XXXX XXXX"
+    :param
+    bottom_range: Нижний диапозон номеров карт
+    up_range: Верхний диапозон номеров карт
+    :return Генератор номера банковских карт"""
+    if bottom_range > up_range and up_range <= 9999999999999999 and 0 < bottom_range:
+        return f'{"Укажите корректно нижний и верхний диапозон"}'
+    generator_numbers = map(
+        lambda x: " ".join(textwrap.wrap(x, 4)), [str(i).zfill(16) for i in range(bottom_range, up_range + 1)]
+    )
+    return generator_numbers

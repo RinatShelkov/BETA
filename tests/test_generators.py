@@ -1,6 +1,6 @@
 import pytest
 
-from src.generators import filter_by_currency
+from src.generators import filter_by_currency, transaction_descriptions
 
 
 @pytest.fixture
@@ -115,5 +115,24 @@ def list_dict_transactions():
     ],
 )
 def test_filter_by_currency(list_dict_transactions, currency, expected):
-    usd_transactions = list(filter_by_currency(list_dict_transactions, currency))
-    assert usd_transactions == expected
+    currency_transactions = list(filter_by_currency(list_dict_transactions, currency))
+    assert currency_transactions == expected
+
+
+@pytest.mark.parametrize(
+    "expected",
+    [
+        (
+            [
+                "Перевод организации",
+                "Перевод со счета на счет",
+                "Перевод со счета на счет",
+                "Перевод с карты на карту",
+                "Перевод организации",
+            ]
+        )
+    ],
+)
+def test_transaction_descriptions(list_dict_transactions, expected):
+    transaction_description = list(transaction_descriptions(list_dict_transactions))
+    assert transaction_description == expected

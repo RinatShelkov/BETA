@@ -28,8 +28,13 @@ def card_number_generator(bottom_range: int, up_range: int) -> Iterator | str:
     bottom_range: Нижний диапозон номеров карт
     up_range: Верхний диапозон номеров карт
     :return Генератор номера банковских карт"""
-    if bottom_range > up_range and up_range <= 9999999999999999 and 0 < bottom_range:
+    if len(str(up_range)) > 16:
         return f'{"Укажите корректно нижний и верхний диапозон"}'
+    elif bottom_range > up_range:
+        return f'{"Укажите корректно нижний и верхний диапозон"}'
+    elif bottom_range <= 0:
+        return f'{"Укажите корректно нижний и верхний диапозон"}'
+
     generator_numbers = map(
         lambda x: " ".join(textwrap.wrap(x, 4)), [str(i).zfill(16) for i in range(bottom_range, up_range + 1)]
     )

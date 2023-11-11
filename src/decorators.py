@@ -1,6 +1,9 @@
 import datetime
+import os
 from functools import wraps
 from typing import Any, Callable
+
+from data.config import ROOT_PATH
 
 
 def log(filename: Any = None) -> Callable:
@@ -20,10 +23,10 @@ def log(filename: Any = None) -> Callable:
                 text_error = e
             if filename is not None:
                 if result == "error":
-                    with open(filename, "a", encoding="utf-8") as f:
+                    with open(os.path.join(ROOT_PATH, filename), "a", encoding="utf-8") as f:
                         f.write(f"{time_func} {func.__name__} {result}: {text_error}. Inputs: {*args, *kwargs}\n")
                 else:
-                    with open(filename, "a", encoding="utf-8") as f:
+                    with open(os.path.join(ROOT_PATH, filename), "a", encoding="utf-8") as f:
                         f.write(f"{time_func} {func.__name__} {result}\n")
             else:
                 if result == "error":

@@ -1,0 +1,1 @@
+2023-11-12 22:55:49 test_func error: TypeError. Inputs: (1, '2'), {}

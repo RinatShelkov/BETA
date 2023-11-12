@@ -1,0 +1,2 @@
+2023-11-12 22:52:14 my_function ok
+2023-11-12 22:52:30 my_function error: TypeError. Inputs: (1, '2'), {}

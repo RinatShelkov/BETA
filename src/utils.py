@@ -34,6 +34,6 @@ def get_summ_transaction_rub(transaction: dict) -> float | Any:
         raise ValueError("Транзакция повреждена")
     elif transaction["operationAmount"]["currency"]["code"] == "RUB":
         rub_amount = transaction["operationAmount"]["amount"]
-        return rub_amount
+        return float(rub_amount)
     else:
         raise ValueError("Транзация выполнена не в рублях. Укажите транзакцию в рублях")

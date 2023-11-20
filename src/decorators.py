@@ -9,7 +9,7 @@ from data.config import LOG_PATH
 def log(filename: Any = None) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
+        def wrapper(*args: Any, **kwargs: Any) -> Callable | Any:
             time_func = datetime.datetime.now().strftime("%Y-%m-%d %X")
 
             try:
@@ -31,4 +31,3 @@ def log(filename: Any = None) -> Callable:
         return wrapper
 
     return decorator
-

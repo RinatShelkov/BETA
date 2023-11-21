@@ -26,9 +26,13 @@ def list_dict_json():
 def test_get_summ_transaction_not_rub(list_dict_json):
     with pytest.raises(ValueError):
         get_summ_transaction_rub(list_dict_json[1])
+
+
 def test_get_summ_transaction_rub(list_dict_json):
     rub_amount = get_summ_transaction_rub(list_dict_json[0])
-    assert rub_amount == "31957.58"
+    assert rub_amount == 31957.58
+
+
 def test_get_summ_transaction_rub_error(list_dict_json):
     with pytest.raises(ValueError):
         get_summ_transaction_rub(list_dict_json[74])

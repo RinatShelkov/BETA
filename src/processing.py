@@ -1,11 +1,7 @@
-import pprint
 import re
 from collections import Counter
 
 import numpy as np
-
-from data.config import OPERATIONS
-from src.utils import get_list_dict_json
 
 
 def get_dict_with_key_state(list_dict: list, key: str = "EXECUTED") -> list:
@@ -59,6 +55,12 @@ def get_dict_description_amount(
     list_dict_operation: list[dict],
     dict_description: dict,
 ) -> dict:
+    """Функция принимает список словарей с данными о банковских операциях и словарь категорий операций
+    и возвращать словарь, в котором ключи — это названия категорий, а значения — это количество операций
+    в каждой категории
+    param list_dict_operation: Список словарей с данными об операциях
+    param dict_description: Словарь, в котором ключи — названия категорий
+    return Словарь, в котором ключи — это названия категории операции, а значения — это количество операций"""
     keys = dict_description.keys()
     result = list(
         np.concatenate(
@@ -67,14 +69,3 @@ def get_dict_description_amount(
     )
     counted = Counter(result)
     return dict(counted)
-
-
-list_dict_op = get_list_dict_json(OPERATIONS)
-list_description = {
-    "Перевод организации": 0,
-    "Перевод с карты на карту": 0,
-    "Открытие вклада": 0,
-    "Перевод со счета на счет": 0,
-}
-
-pprint.pprint(get_dict_description_amount(list_dict_op, list_description))

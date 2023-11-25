@@ -1,3 +1,6 @@
+import re
+
+
 def get_dict_with_key_state(list_dict: list, key: str = "EXECUTED") -> list:
     """Функция принимает список словарей и возвращает список словарей с ключом state = EXECUTED
     :param
@@ -25,3 +28,21 @@ def get_sorted_list(list_dict: list, revers: bool = True) -> list:
 
     sorted_list = sorted(list_dict, key=lambda date: date["date"], reverse=revers)
     return sorted_list
+
+
+def get_list_dict_search_string(list_dict: list, search_string: str) -> list:
+    """Функция принимает список словарей с данными о банковских операциях и строку поиска и
+    возвращает список словарей, у которых в описании есть данная строка
+    param list_dict: Список словарей с данными о операции
+    param search_string: Строка поиска
+    return Список словарей, у которых в описании есть данная строка"""
+
+    list_dict_with_description = []
+    for dictionary in list_dict:
+        if bool(dictionary) is True:
+            value = dictionary.get("description")
+            search = re.search(search_string, value, flags=re.IGNORECASE)
+            if search is not None:
+                list_dict_with_description.append(dictionary)
+
+    return list_dict_with_description

@@ -1,4 +1,11 @@
+import pprint
 import re
+from collections import Counter
+
+import numpy as np
+
+from data.config import OPERATIONS
+from src.utils import get_list_dict_json
 
 
 def get_dict_with_key_state(list_dict: list, key: str = "EXECUTED") -> list:
@@ -39,10 +46,35 @@ def get_list_dict_search_string(list_dict: list, search_string: str) -> list:
 
     list_dict_with_description = []
     for dictionary in list_dict:
-        if bool(dictionary) is True:
+        if bool(dictionary) is True and type(dictionary) is not str:
             value = dictionary.get("description")
-            search = re.search(search_string, value, flags=re.IGNORECASE)
+            search = re.search(search_string, str(value), flags=re.IGNORECASE)
             if search is not None:
                 list_dict_with_description.append(dictionary)
 
     return list_dict_with_description
+
+
+def get_dict_description_amount(
+    list_dict_operation: list[dict],
+    dict_description: dict,
+) -> dict:
+    keys = dict_description.keys()
+    result = list(
+        np.concatenate(
+            [[des.get("description") for des in get_list_dict_search_string(list_dict_operation, key)] for key in keys]
+        )
+    )
+    counted = Counter(result)
+    return dict(counted)
+
+
+list_dict_op = get_list_dict_json(OPERATIONS)
+list_description = {
+    "Перевод организации": 0,
+    "Перевод с карты на карту": 0,
+    "Открытие вклада": 0,
+    "Перевод со счета на счет": 0,
+}
+
+pprint.pprint(get_dict_description_amount(list_dict_op, list_description))

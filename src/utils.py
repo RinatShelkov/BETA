@@ -2,6 +2,9 @@ import json
 from os import PathLike
 from typing import Any
 
+import numpy as np
+import pandas as pd
+
 from src.logger import logging_utils
 
 
@@ -47,3 +50,30 @@ def get_summ_transaction_rub(transaction: dict) -> float | Any:
     else:
         logger_utils.error("Транзакция выполнена не в рублях. Укажите транзакцию в рублях")
         raise ValueError("Транзация выполнена не в рублях. Укажите транзакцию в рублях")
+
+
+def reading_csv_xlsx_file(path: PathLike) -> Any:
+    """Функция считывание финансовых операций с CSV- и XLSX-файлов
+    param path: путь к файлу
+    return: список словарей с данными
+    """
+    path_str = str(path)
+
+    if path_str.endswith(".csv"):
+        results = pd.read_csv(path, sep=";")
+
+    elif path_str.endswith(".xlsx"):
+        results = pd.read_excel(path)
+    else:
+        return "Неверное расширение файла, задан неправильный путь"
+
+    results = pd.DataFrame(results).replace({np.nan: None})
+    result_list_dict = results.to_dict(orient="records")
+
+    for i in result_list_dict:
+        i["operationAmount"] = {
+            "amount": i["amount"],
+            "currency": {"name": i["currency_name"], "code": i["currency_code"]},
+        }
+        del i["amount"], i["currency_name"], i["currency_code"]
+    return result_list_dict

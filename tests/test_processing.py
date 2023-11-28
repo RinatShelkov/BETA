@@ -1,6 +1,11 @@
+from unittest.mock import patch
+
 import pytest
 
-from src.processing import get_dict_with_key_state, get_sorted_list
+from data.config import OPERATIONS
+from src.processing import (get_dict_description_amount, get_dict_with_key_state, get_list_dict_search_string,
+                            get_sorted_list)
+from src.utils import get_list_dict_json
 
 
 @pytest.fixture
@@ -61,3 +66,39 @@ def test_get_dict_with_key_state(list_dict, key, expected):
 )
 def test_get_sorted_list(list_dict, revers, expected):
     assert get_sorted_list(list_dict, revers) == expected
+
+
+def test_get_list_dict_search_string():
+    with patch("src.processing.get_list_dict_search_string") as mock_get:
+        mock_get(get_list_dict_json(OPERATIONS), "Перевод организации").return_value = {
+            "id": 441945886,
+            "state": "EXECUTED",
+            "date": "2019-08-26T10:50:58.294041",
+            "operationAmount": {"amount": "31957.58", "currency": {"name": "руб.", "code": "RUB"}},
+            "description": "Перевод организации",
+            "from": "Maestro 1596837868705199",
+            "to": "Счет 64686473678894779589",
+        }
+
+        assert get_list_dict_search_string(get_list_dict_json(OPERATIONS), "Перевод организации")[0] == {
+            "id": 441945886,
+            "state": "EXECUTED",
+            "date": "2019-08-26T10:50:58.294041",
+            "operationAmount": {"amount": "31957.58", "currency": {"name": "руб.", "code": "RUB"}},
+            "description": "Перевод организации",
+            "from": "Maestro 1596837868705199",
+            "to": "Счет 64686473678894779589",
+        }
+        mock_get.assert_called_once_with(get_list_dict_json(OPERATIONS), "Перевод организации")
+
+
+def test_get_dict_description_amount():
+    with patch("src.processing.get_dict_description_amount") as mock_get:
+        mock_get(get_list_dict_json(OPERATIONS), {"Перевод организации": ""}).return_value = {
+            "Перевод организации": 40
+        }
+
+        assert get_dict_description_amount(get_list_dict_json(OPERATIONS), {"Перевод организации": ""}) == {
+            "Перевод организации": 40
+        }
+        mock_get.assert_called_once_with(get_list_dict_json(OPERATIONS), {"Перевод организации": ""})
